@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Socket.IO chat</title>
+    <link type="text/css" href="css/main.css" rel="stylesheet">
+</head>
+
+<body>
+    <ul id="messages"></ul>
+    <form id="form-messages" action="">
+        <input id="input" autocomplete="off" />
+        <button>Send</button>
+    </form>
+    <div id="form-user" action="">
+        <input id="user"/>
+        <button id="btn-user">connect</button>
+    </div>
+</body>
+
+<script src="/socket.io/socket.io.js"></script>
+<script>
+    var socket = io();
+
+    var messages = document.getElementById('messages');
+    var form = document.getElementById('form-messages');
+    var input = document.getElementById('input');
+    var usuario;
+    var sesion = 0;
+
+    document.getElementById("btn-user").addEventListener("click", function (event) {
+        if(document.getElementById("user").value == ""){
+            alert("llenar el nombre")
+        }else{
+            usuario = document.getElementById("user").value
+            alert(usuario)
+            socket.emit('definir usuario', usuario);
+        }
+    });
+
+    form.addEventListener('submit', function (e) {
+        e.preventDefault();
+        console.log(sesion)
+        if (input.value && sesion==1) {
+            socket.emit('chat message', usuario + ": " + input.value);
+            input.value = '';
+        }
+    });
+
+    socket.on('chat message', function (msg) {
+        console.log(sesion)
+        if (sesion = 1) {
+            var item = document.createElement('li');
+            item.textContent = msg;
+            messages.appendChild(item);
+            window.scrollTo(0, document.body.scrollHeight);
+        }
+
+    });
+
+    socket.on('usuario definido', function (msg) {
+        sesion = msg
+        if(sesion == 1){
+            document.getElementById("user").disable = true
+        }
+    });
+
+</script>
+
+</html>
