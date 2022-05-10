@@ -3,22 +3,34 @@
 
 <head>
     <title>Socket.IO chat</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
     <link type="text/css" href="css/main.css" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap"
+        rel="stylesheet">
 </head>
 
 <body>
-    <div>
-        <div></div>
-        <button>Iniciar Sesion</button>
-        <button>Jugar Solo</button>
-        <button>Crear una Sala</button>
-        <button>Entrar a una sala</button>
+    <div class="container">
+        <h1>Text Twist</h1>
+        <button type="button" class="btn btn-primary btn-lg btn-radius rounded-pill" id="Iniciar Sesion">Iniciar Sesion</button>
+        <button type="button" class="btn btn-primary btn-lg btn-radius rounded-pill" onclick="window.location.href='/solo'">Jugar Solo</button>
+        <button type="button" class="btn btn-primary btn-lg btn-radius rounded-pill">Crear una Sala</button>
+        <button type="button" class="btn btn-primary btn-lg btn-radius rounded-pill">Entrar a una sala</button>
     </div>
 </body>
 
 <script src="/socket.io/socket.io.js"></script>
 <script>
     var socket = io();
+    
+    document.getElementById("Iniciar Sesion").onclick = function() {
+        socket.emit('verificar socket');
+        console.log("hi")
+    };
+
 
 </script>
 
