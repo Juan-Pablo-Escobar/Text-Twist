@@ -2,6 +2,10 @@
     font-family: 'Montserrat', sans-serif;
 }
 
+body {
+    overscroll-behavior-y: contain;
+}
+
 p {
     margin-top: 0 !important;
     margin-bottom: 0 !important;
@@ -91,12 +95,12 @@ body {
 .btn {
     margin-top: 1%;
     margin-bottom: 1%;
-    font-size: 3rem;
-    padding: 1rem 2rem;
+    font-size: 1.5rem;
+    padding: 0.5rem 1rem;
 }
 
 h1 {
-    font-size: 5rem;
+    font-size: 3.5rem;
     margin-bottom: 5%;
 }
 
@@ -280,6 +284,7 @@ h1 {
 }
 
 #score>div {
+    overflow: hidden;
     position: fixed;
     height: 3%;
     top: 3%;
@@ -296,7 +301,7 @@ h1 {
 
 #score>div>div {
     height: 100%;
-    width: 100%;
+    width: 0%;
     border-radius: 2rem;
     background-image: linear-gradient(45deg, #4ab9ff 25%, #f3000000 25%, transparent 50%, #4ab9ff 50%, #4ab9ff 75%, transparent 75%, #fff0);
     background-size: 50px 50px;
@@ -315,6 +320,8 @@ h1 {
     align-items: center;
 }
 
+
+
 @keyframes slide {
     from {
         background-position-x: 0;
@@ -323,4 +330,164 @@ h1 {
     to {
         background-position-x: -100px;
     }
+}
+
+@keyframes slide-back {
+    from {
+        background-position-x: 0;
+    }
+
+    to {
+        background-position-x: 100px;
+    }
+}
+
+
+#score-sala>div {
+    overflow: hidden;
+    position: fixed;
+    height: 3%;
+    top: 7%;
+    width: 80%;
+    left: 10%;
+    background: rebeccapurple;
+    background-color: #cbf1ff;
+    border-radius: 2rem;
+    outline: 3px solid #bbd3ff;
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+}
+
+/* #score-sala>div>div {
+    height: 100%;
+    width: 0%;
+    border-radius: 2rem;
+    background-image: linear-gradient(45deg, #4ab9ff 25%, #f3000000 25%, transparent 50%, #4ab9ff 50%, #4ab9ff 75%, transparent 75%, #fff0);
+    background-size: 50px 50px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    animation: slide 4s linear infinite;
+    will-change: background-position;
+} */
+
+#score-sala>div>p{
+    position: absolute;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+
+#palabras-por-llenar-sala {
+    position: fixed;
+    height: 52%;
+    width: 80%;
+    right: 10%;
+    top: 12%;
+    left: 10%;
+    background-color: #cbf1ff;
+    border-radius: 2rem;
+    outline: 3px solid #bbd3ff;
+}
+
+#palabras-por-llenar-sala>div {
+    height: -webkit-fill-available;
+    width: -webkit-fill-available;
+    margin: 4%;
+    display: flex;
+    flex-direction: column;
+    flex-wrap: nowrap;
+    align-items: center;
+    overflow-y: auto;
+}
+
+#palabras-por-llenar-sala>div>div {
+    display: flex;
+}
+
+#palabras-por-llenar-sala>div>div>div {
+    position: inherit;
+    border-radius: 10px;
+    width: 40px;
+    height: 40px;
+    margin-left: 2.5px;
+    margin-right: 2.5px;
+    background-color: #aebbff;
+    margin-top: 2.5px;
+    margin-bottom: 2.5px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+
+#sala-info{
+    display: flex;
+    justify-content: center;
+}
+
+#sala-info>div{
+    top: 1%;
+    height: 5%;
+    width: 100%;
+    position: absolute;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    align-content: center;
+}
+
+
+#sala-info>div>div:nth-of-type(1){
+    height: 70%;
+    display: flex;
+    align-items: center;
+    width: 30%;
+    justify-content: flex-end;
+    padding-right: 4%;
+    background-color: #cbf1ff;
+    border-radius: 0rem 2rem 2rem 0rem;
+    outline: 3px solid #bbd3ff;
+}
+
+#sala-info>div>div:nth-of-type(3){
+    height: 70%;
+    display: flex;
+    align-items: center;
+    width: 30%;
+    justify-content: flex-start;
+    padding-left: 4%;
+    background-color: #cbf1ff;
+    border-radius: 2rem 0rem 0rem 2rem;
+    outline: 3px solid #bbd3ff;
+}
+
+
+#load-player1{
+    height: 100%;
+    width: 50%;
+    background-image: linear-gradient(45deg, #4ab9ff 25%, #f3000000 25%, transparent 50%, #4ab9ff 50%, #4ab9ff 75%, transparent 75%, #fff0);
+    background-size: 50px 50px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-position: center;
+    animation: slide 4s linear infinite;
+    will-change: background-position;
+}
+
+#load-player2{
+    height: 100%;
+    width: 50%;
+    background-image: linear-gradient(315deg, #e7672a 25%, #f3000000 25%, transparent 50%, #e7672a 50%, #e7672a 75%, transparent 75%, #fff0);
+    background-size: 50px 50px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-position: center;
+    animation: slide-back 4s linear infinite;
+    will-change: background-position;
 }

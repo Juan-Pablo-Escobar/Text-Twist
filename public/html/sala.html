@@ -1,6 +1,5 @@
 <!DOCTYPE html>
-<html lang="fr">
-
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <link type="text/css" href="css/main.css" rel="stylesheet">
@@ -15,34 +14,41 @@
         rel="stylesheet">
     <title>Document</title>
 </head>
-
 <body>
-    <div class="modal fade show" id="myModal">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h4 class="modal-title">Cargando Partida</h4>
-                </div>
-                <div class="modal-body">
-                    <div class="spinner-border text-primary" role="status">
-                        <span class="visually-hidden"></span>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
+    
+<body>
     <div id="game">
-        <div id="score">
+        <div id="sala-info">
             <div>
                 <div>
-                    
+                    <p id="player1">
+                    </p>
                 </div>
-                <p>
-                    0%
-                </p>
+                <div>
+                    <p id="sala">
+                    </p>
+                </div>
+                <div>
+                    <p id="player2">
+                    </p>
+                </div>
             </div>
         </div>
-        <div id="palabras-por-llenar">
+        <div id="score-sala">
+            <div>
+                <div id="load-player1">
+                    <p>
+                        0%
+                    </p>
+                </div>
+                <div id="load-player2">
+                    <p>
+                        0%
+                    </p>
+                </div>
+            </div>
+        </div>
+        <div id="palabras-por-llenar-sala">
             <div>
             </div>
         </div>
@@ -134,10 +140,10 @@
 <script src="/socket.io/socket.io.js"></script>
 <script>
     var socket = io();
+
     var disponibles = []
     var palabra = []
     var letras = document.getElementById("disponibles").childNodes
-    socket.emit("crear partida solo",)
 
     document.getElementById("Limpiar").onclick = Limpiar
     document.getElementById("Reordenar").onclick = Reordenar
@@ -149,6 +155,60 @@
             disponibles.push(letras[i].childNodes[1])
         }
     }
+
+    socket.on("registrado en sala",function (msg) {
+        document.getElementById("player" + msg["posicion"]).innerHTML = "PLAYER-" + msg["nombre"]
+        document.getElementById("sala").innerHTML = "SALA-" + msg["sala"]
+    })
+
+    socket.on("partida comenzada",function (msg) {
+        juego = msg["partida"]
+        console.log(juego)
+        document.getElementById("player" + msg["posicion"]).innerHTML = "PLAYER-" + msg["oponente"]
+        contenedor = document.getElementById("palabras-por-llenar-sala").childNodes[1]
+        for (let i = 0; i < juego["conteo"].length; i++) {
+            node = document.createElement("div")
+            for (let j = 0; j < juego["conteo"][i]; j++) {
+                p = document.createElement("p")
+                div = document.createElement("div")
+                div.appendChild(p)
+                node.appendChild(div)
+            }
+            contenedor.appendChild(node)
+        }
+
+        for (let i = 0; i < disponibles.length; i++) {
+            disponibles[i].childNodes[1].innerHTML=juego["letras"][i].toUpperCase() 
+        }
+    })
+
+    window.addEventListener("load", function(event) {
+        socket.emit("sala cargada")
+    });
+
+    socket.on('respuesta adivinar palabra sala', function (msg) {
+        console.log(msg)
+        if(msg == -1){
+
+        }else{
+            palabras = document.getElementById("palabras-por-llenar-sala").childNodes[1].childNodes[msg["indice"]+1]
+            for (let i = 0; i < msg["palabra"].length; i++) {
+                palabras.childNodes[i].childNodes[0].innerHTML=msg["palabra"][i].toUpperCase()
+            }
+            palabras.scrollIntoView()
+            document.getElementById("load-player1").setAttribute("style","width:" + (msg["puntajep1"])+"%")
+            document.getElementById("load-player1").childNodes[1].innerHTML = (Math.round(msg["puntajep1"]) + "%")
+            document.getElementById("load-player2").setAttribute("style","width:" + (msg["puntajep2"])+"%")
+            document.getElementById("load-player2").childNodes[1].innerHTML = (Math.round(msg["puntajep2"]) + "%")
+        }
+    })
+
+    socket.on("actualizar score sala",function (msg) {
+        document.getElementById("load-player1").setAttribute("style","width:" + (msg["puntajep1"])+"%")
+        document.getElementById("load-player1").childNodes[1].innerHTML = (Math.round(msg["puntajep1"]) + "%")
+        document.getElementById("load-player2").setAttribute("style","width:" + (msg["puntajep2"])+"%")
+        document.getElementById("load-player2").childNodes[1].innerHTML = (Math.round(msg["puntajep2"]) + "%")
+    })
 
     function moverLetra(elem) {
         if (palabra.indexOf(elem) == -1) {
@@ -177,28 +237,12 @@
         palabra = []
     }
 
-
-    socket.on('respuesta adivinar palabra solo', function (msg) {
-        if(msg == -1){
-
-        }else{
-            palabras = document.getElementById("palabras-por-llenar").childNodes[1].childNodes[msg["indice"]+1]
-            for (let i = 0; i < msg["palabra"].length; i++) {
-                palabras.childNodes[i].childNodes[0].innerHTML=msg["palabra"][i].toUpperCase()
-            }
-            palabras.scrollIntoView()
-            document.getElementById("score").childNodes[1].childNodes[1].setAttribute("style","width:" + (msg["puntaje"])+"%")
-            document.getElementById("score").childNodes[1].childNodes[3].innerHTML = (Math.round(msg["puntaje"]) + "%")
-        }
-    })
-
-
     function Adivinar(){
         palabra_adivinar = ""
         for (let i = 0; i < palabra.length; i++) {
             palabra_adivinar = palabra_adivinar + palabra[i].childNodes[1].innerHTML
         }
-        socket.emit("adivinar palabra solo",palabra_adivinar)
+        socket.emit("adivinar palabra sala",palabra_adivinar)
         Limpiar()
     }
 
@@ -214,34 +258,5 @@
         }
     }
 
-    socket.on('partida solo configurada', function (msg) {
-        console.log(msg)
-        juego = msg
-        document.getElementById("myModal").addEventListener("transitionend", function(){
-            document.getElementById("myModal").classList.add("display-off")
-            document.getElementById("myModal").addEventListener("transitionend",function(){})
-        });
-        document.getElementById("myModal").classList.remove("show")
-
-        contenedor = document.getElementById("palabras-por-llenar").childNodes[1]
-        for (let i = 0; i < juego["conteo"].length; i++) {
-            node = document.createElement("div")
-            for (let j = 0; j < juego["conteo"][i]; j++) {
-                p = document.createElement("p")
-                div = document.createElement("div")
-                div.appendChild(p)
-                node.appendChild(div)
-            }
-            contenedor.appendChild(node)
-        }
-
-        for (let i = 0; i < disponibles.length; i++) {
-            disponibles[i].childNodes[1].innerHTML=juego["letras"][i].toUpperCase() 
-        }
-
-    });
-
-
 </script>
-
 </html>
